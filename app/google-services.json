@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "262590356300",
+    "firebase_url": "https://one-fold-tv.firebaseio.com",
+    "project_id": "one-fold-tv",
+    "storage_bucket": "one-fold-tv.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:262590356300:android:651f079786766e82d70de9",
+        "android_client_info": {
+          "package_name": "com.solojet.onefoldtv"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "262590356300-bfsqmq6nskaa2plr6qhmnuj8tcfbdspo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.solojet.onefoldtv",
+            "certificate_hash": "1b3345a36c55cc79db328895f7916bbf88370147"
+          }
+        },
+        {
+          "client_id": "262590356300-hjs995bprktddoahi0pk51glck3r2p90.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCC3TOuS9KfnmWKuV35DtCFvtMbS8rYWJs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "262590356300-hjs995bprktddoahi0pk51glck3r2p90.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
