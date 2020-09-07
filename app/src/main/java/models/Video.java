@@ -7,7 +7,7 @@ public class Video {
     private String title;
     private String des;
     private String urlIndex;
-    private String section;
+    private String type;
     private long time;
     private long likesCount;
     private ArrayList likes;
@@ -46,12 +46,12 @@ public class Video {
         this.urlIndex = urlIndex;
     }
 
-    public String getSection() {
-        return section;
+    public String getType() {
+        return type;
     }
 
-    public void setSection(String section) {
-        this.section = section;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public long getTime() {
