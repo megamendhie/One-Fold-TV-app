@@ -3,11 +3,13 @@ package adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
@@ -21,7 +23,7 @@ public class ContentAdapter extends FirestoreRecyclerAdapter<Video, ContentAdapt
     private boolean mediaLoaded = false;
 
     public interface ItemClickListener {
-        void onItemClicked (String urlIndex);
+        void onItemClicked (String urlIndex, boolean instantPlay);
     }
 
     public ContentAdapter (ItemClickListener clickListener, Query query){
@@ -34,7 +36,7 @@ public class ContentAdapter extends FirestoreRecyclerAdapter<Video, ContentAdapt
     private void playFirst(TextView txtTitle, String index){
         txtTitle.setTextColor(txtTitle.getContext().getResources().getColor(R.color.colorPrimary));
         this.txtCurrentlyPlaying = txtTitle;
-        clickListener.onItemClicked(index);
+        clickListener.onItemClicked(index, false);
         mediaLoaded = true;
     }
 
@@ -47,15 +49,22 @@ public class ContentAdapter extends FirestoreRecyclerAdapter<Video, ContentAdapt
 
     @Override
     protected void onBindViewHolder(@NonNull ContentViewHolder holder, int position, @NonNull Video model) {
+        String thumbnailHq = "https://img.youtube.com/vi/"+model.getUrlIndex()+"/hqdefault.jpg";
+
         holder.bindView(clickListener, model);
+        Glide.with(holder.imgThumbnail).load(thumbnailHq).into(holder.imgThumbnail);
         if(!mediaLoaded && position==0)
             playFirst(holder.txtTitle, model.getUrlIndex());
+
     }
 
     class ContentViewHolder extends RecyclerView.ViewHolder{
-        TextView txtTitle;
+        private ImageView imgThumbnail;
+        private TextView txtTitle;
+
         ContentViewHolder(@NonNull View itemView) {
             super(itemView);
+            imgThumbnail = itemView.findViewById(R.id.imgThumbnail);
             txtTitle = itemView.findViewById(R.id.txtTitle);
         }
 
@@ -68,7 +77,7 @@ public class ContentAdapter extends FirestoreRecyclerAdapter<Video, ContentAdapt
                 txtTitle.setTextColor(itemView.getContext().getResources().getColor(R.color.colorPrimary));
                 mediaLoaded = true;
                 txtCurrentlyPlaying = txtTitle;
-                listener.onItemClicked(model.getUrlIndex());
+                listener.onItemClicked(model.getUrlIndex(), true);
             });
         }
     }
