@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EventLandingActivity"></activity>
+        <activity android:name=".UploadVideoActivity"></activity>
+        <activity android:name=".EventLandingActivity" />
         <activity android:name=".AboutActivity" />
         <activity android:name=".EventsActivity" />
         <activity android:name=".ContentActivity" />
