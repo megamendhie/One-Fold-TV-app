@@ -2,6 +2,9 @@
 <resources>
     <color name="colorPrimary">#303F9F</color>
     <color name="colorPrimaryDark">#1A237E</color>
-    <color name="colorAccent">#FA4E7F</color>
+    <color name="colorAccent">#FD0048</color>
     <color name="colorBlack">#111111</color>
+    <color name="color_whatsapp">#25D366</color>
+    <color name="color_twitter">#1da1f2</color>
+    <color name="color_facebook">#3b5998</color>
 </resources>
