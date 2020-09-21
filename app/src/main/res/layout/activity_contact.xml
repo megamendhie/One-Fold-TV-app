@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    xmlns:card_view="http://schemas.android.com/tools"
+    tools:context=".ContactActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imgContact"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:layout_marginTop="10dp"
+            android:scaleType="fitXY"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/ic_contact_us"
+            android:contentDescription="contact" />
+
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/crdEmail"
+            android:layout_width="240dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/imgContact"
+            android:layout_marginTop="30dp"
+            android:layout_centerHorizontal="true"
+            android:clickable="true"
+            android:elevation="6dp"
+            android:padding="2dp"
+            app:cardCornerRadius="@dimen/vertical_padding"
+            card_view:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/holo_red_dark"
+                android:gravity="center_vertical"
+                android:padding="6dp">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:tint="@android:color/white"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_mail_outline_black_24dp" />
+
+                <TextView
+                    android:id="@+id/txtEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="EMAIL"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/crdWhatsapp"
+            android:layout_width="240dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/crdEmail"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:clickable="true"
+            app:cardCornerRadius="@dimen/vertical_padding"
+            android:elevation="6dp"
+            card_view:cardUseCompatPadding="true"
+            android:padding="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/color_whatsapp"
+                android:padding="6dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:tint="@android:color/white"
+                    android:src="@drawable/ic_whatsapp"
+                    android:scaleType="centerInside"/>
+
+                <TextView
+                    android:id="@+id/txtWhatsapp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:text="WHATSAPP" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/crdTwitter"
+            android:layout_width="240dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/crdWhatsapp"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:clickable="true"
+            android:elevation="6dp"
+            android:padding="2dp"
+            app:cardCornerRadius="@dimen/vertical_padding"
+            card_view:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/color_twitter"
+                android:gravity="center_vertical"
+                android:padding="6dp">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_twitter"
+                    android:tint="@android:color/white"/>
+
+                <TextView
+                    android:id="@+id/txtTwitter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="TWITTER"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/crdFacebook"
+            android:layout_width="240dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/crdTwitter"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:clickable="true"
+            android:elevation="6dp"
+            android:padding="2dp"
+            app:cardCornerRadius="@dimen/vertical_padding"
+            card_view:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/color_facebook"
+                android:gravity="center_vertical"
+                android:padding="6dp">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:tint="@android:color/white"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_facebook" />
+
+                <TextView
+                    android:id="@+id/txtFacebook"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="FACEBOOK"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/crdFacebook"
+            android:layout_marginTop="50dp"
+            android:padding="16sp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Address:"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="The Apostolic Church, Uyo Field Headquaters, 61 Obio Imo Street, Uyo."
+                android:layout_marginLeft="4dp"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:textSize="16sp"
+                android:textColor="@color/colorPrimary"/>
+        </LinearLayout>
+    </RelativeLayout>
+</androidx.core.widget.NestedScrollView>
