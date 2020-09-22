@@ -19,17 +19,29 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import adapters.ContentAdapter;
+import config.FirebaseUtils;
+import models.Video;
 
 import static config.Config.YOUTUBE_API_KEY;
 import static models.ConstantVariables.ALL;
+import static models.ConstantVariables.STATUS;
 import static models.ConstantVariables.TYPE;
 
 public class ContentActivity extends YouTubeBaseActivity implements ContentAdapter.ItemClickListener, YouTubePlayer.OnInitializedListener {
 
     private YouTubePlayerView youTubeView;
     private static final int RECOVERY_REQUEST = 1;
-    private TextView txtDescription;
+    private TextView txtTitle, txtDescription, txtLikes;
     private String index;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(FirebaseUtils.getAuth().getCurrentUser()!=null)
+            userId = FirebaseUtils.getAuth().getCurrentUser().getUid();
+    }
+
+    private String userId;
     private YouTubePlayer player;
     private boolean instantPlay;
     private String type;
@@ -41,12 +53,20 @@ public class ContentActivity extends YouTubeBaseActivity implements ContentAdapt
 
         youTubeView = findViewById(R.id.playerMain);
         RecyclerView lstVideos = findViewById(R.id.lstVideos);
+        txtTitle = findViewById(R.id.txtTitle);
         txtDescription = findViewById(R.id.txtDes);
+        txtLikes = findViewById(R.id.txtLikes);
+
         lstVideos.setLayoutManager(new LinearLayoutManager(this));
         youTubeView.initialize(YOUTUBE_API_KEY, this);
 
         FloatingActionButton fab = findViewById(R.id.fabPost);
-        fab.setOnClickListener(view -> startActivity(new Intent(ContentActivity.this, UploadVideoActivity.class)));
+        fab.setOnClickListener(view -> {
+            Intent intent = new Intent(ContentActivity.this, UploadVideoActivity.class);
+            intent.putExtra(STATUS, "new");
+            startActivity(intent);
+
+        });
 
         //get video type
         if(getIntent()!=null)
@@ -72,8 +92,18 @@ public class ContentActivity extends YouTubeBaseActivity implements ContentAdapt
     }
 
     @Override
-    public void onItemClicked(String index, boolean instantPlay) {
-        this.index = index;
+    public void onItemClicked(Video model, boolean instantPlay) {
+        txtTitle.setText(model.getTitle());
+        txtDescription.setText(model.getDes());
+
+        txtLikes.setText(model.getLikesCount()>=1? String.valueOf(model.getLikesCount()): "");
+
+        if(model.getLikes().contains(userId))
+            txtLikes.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_favorite_black_24dp, 0, 0, 0);
+        else
+            txtLikes.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_favorite_border_black_24dp, 0, 0, 0);
+
+        this.index = model.getUrlIndex();
         this.instantPlay = instantPlay;
         if(player!=null)
             player.cueVideo(index);
