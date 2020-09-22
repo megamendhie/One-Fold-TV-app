@@ -14,7 +14,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UploadVideoActivity"></activity>
+        <activity android:name=".ContactActivity"></activity>
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".NewsActivity" />
+        <activity android:name=".SignupActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".UploadVideoActivity" />
         <activity android:name=".EventLandingActivity" />
         <activity android:name=".AboutActivity" />
         <activity android:name=".EventsActivity" />
