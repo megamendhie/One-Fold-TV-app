@@ -20,14 +20,14 @@ public class Video implements Parcelable {
 
     public Video(){}
 
-    public Video(String title, String des, String urlIndex, String type, String posterName, String posterId){
+    public Video(String title, String des, String urlIndex, String type, String posterName, String posterId, long time){
         this.title = title;
         this.des = des;
         this.urlIndex = urlIndex;
         this.type = type;
         this.posterName = posterName;
         this.posterId = posterId;
-        this.time = 0;
+        this.time = time;
         likesCount= 0;
     }
 
@@ -118,6 +118,14 @@ public class Video implements Parcelable {
 
     public void setLikes(List<String> likes) {
         this.likes = likes;
+    }
+
+    public void addLike(String userId){
+        this.likes.add(userId);
+    }
+
+    public void removeLike(String userId){
+        this.likes.remove(userId);
     }
 
     public String getPosterName() {

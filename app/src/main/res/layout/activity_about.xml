@@ -58,7 +58,7 @@ tools:context=".AboutActivity">
                 android:id="@+id/txtAbout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="The One Fold TV app is ..."
+                android:text="@string/txt_about"
                 android:textSize="16sp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
         </LinearLayout>

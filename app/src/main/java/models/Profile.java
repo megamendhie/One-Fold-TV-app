@@ -8,11 +8,13 @@ public class Profile {
     private String lastName;
     private String bio;
     private String email;
+    private String phone;
+    private String country;
+    private String gender;
     private String imageUrl;
     private String assembly;
     private String district;
-    private String area;
-    private long lastSeen;
+    private String field;
     private boolean member;
     private boolean admin;
     private int adminStatus;
@@ -24,11 +26,13 @@ public class Profile {
         this.lastName = lastName;
         this.email = email;
         this.id = id;
+        phone = "";
+        country = "";
         bio = "";
         imageUrl = "";
+        gender = "";
         adminStatus = 0;
-        lastSeen = new Date().getTime();
-        assembly = ""; district = ""; area = "";
+        assembly = ""; district = ""; field = "";
     }
 
     public String getId() {
@@ -79,20 +83,12 @@ public class Profile {
         this.district = district;
     }
 
-    public String getArea() {
-        return area;
+    public String getField() {
+        return field;
     }
 
-    public void setArea(String area) {
-        this.area = area;
-    }
-
-    public long getLastSeen() {
-        return lastSeen;
-    }
-
-    public void setLastSeen(long lastSeen) {
-        this.lastSeen = lastSeen;
+    public void setField(String field) {
+        this.field = field;
     }
 
     public boolean isMember() {
@@ -133,5 +129,29 @@ public class Profile {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }

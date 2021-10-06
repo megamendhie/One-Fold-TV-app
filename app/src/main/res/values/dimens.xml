@@ -3,11 +3,14 @@
     <dimen name="dm_txt_padding">15dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="comment_padding">4dp</dimen>
-    <dimen name="vertical_padding">14dp</dimen>
+    <dimen name="vertical_padding">16dp</dimen>
     <dimen name="general_padding">12dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="design_bottom_navigation_active_text_size">12sp</dimen>
     <dimen name="img_padding">1dp</dimen>
     <dimen name="placeholder_image">50dp</dimen>
     <dimen name="placeholder_text_height">12dp</dimen>
+    <dimen name="txt_input_padding_ver">14dp</dimen>
+    <dimen name="btn_padding">12dp</dimen>
+    <dimen name="box_cnr_radius">16dp</dimen>
 </resources>

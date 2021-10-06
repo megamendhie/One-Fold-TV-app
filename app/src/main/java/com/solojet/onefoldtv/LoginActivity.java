@@ -6,8 +6,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -37,10 +40,16 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.gson.Gson;
 
 import config.FirebaseUtils;
 import config.Reusable;
 import models.Profile;
+
+import static models.ConstantVariables.IS_ADMIN;
+import static models.ConstantVariables.USERS_PATH;
+import static models.ConstantVariables.USER_PROFILE;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -50,10 +59,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private ProgressBar prgLogin;
     private ProgressDialog progressDialog;
 
-    private SharedPreferences.Editor editor;
     private GoogleSignInClient mGoogleSignInClient;
 
     private FirebaseUser user;
+    private SharedPreferences.Editor editor;
+    private Gson gson = new Gson();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +143,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         finish();
@@ -182,19 +191,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         progressDialog.setTitle("Signing in...");
         progressDialog.show();
         FirebaseUtils.getAuth().signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressDialog.dismiss();
-                        prgLogin.setVisibility(View.GONE);
-                        if(task.isSuccessful()){
-                            editor.putString("PASSWORD", edtPassword.getText().toString().trim());
-                            editor.putString("EMAIL", edtEmail.getText().toString().trim());
-                            editor.apply();
-                            Snackbar.make(edtEmail, "Login successful", Snackbar.LENGTH_SHORT).show();
-                            user = FirebaseUtils.getAuth().getCurrentUser();
-                            finish();
-                        }
+                .addOnCompleteListener(this, task -> {
+                    progressDialog.dismiss();
+                    prgLogin.setVisibility(View.GONE);
+                    if(task.isSuccessful()){
+                        editor.putString("PASSWORD", edtPassword.getText().toString().trim());
+                        editor.putString("EMAIL", edtEmail.getText().toString().trim());
+                        editor.apply();
+                        Snackbar.make(edtEmail, "Login successful", Snackbar.LENGTH_SHORT).show();
+                        user = FirebaseUtils.getAuth().getCurrentUser();
+                        saveData(false);
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -209,6 +215,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Intent intent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(intent, RC_SIGN_IN);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -238,23 +245,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     if(task.isSuccessful()){
                         user = FirebaseUtils.getAuth().getCurrentUser();
                         final String userId = user.getUid();
-                        final DocumentReference ref = FirebaseUtils.getDatabase()
-                                .collection("users").document(userId);
+                        final DocumentReference ref = FirebaseFirestore.getInstance().collection(USERS_PATH).document(userId);
 
-                        ref.get().addOnCompleteListener(task1 -> {
-                            if(task1.isSuccessful()){
+                        ref.get().addOnCompleteListener(taskUser -> {
+                            if(taskUser.isSuccessful()){
+                                if(taskUser.getResult()!=null && taskUser.getResult().exists()){
+                                    Snackbar.make(edtEmail, "LOGIN SUCCESSFUL", Snackbar.LENGTH_LONG).show();
+                                    Profile profile = taskUser.getResult().toObject(Profile.class);
+                                    String profileJson = gson.toJson(profile);
+                                    editor.putString(USER_PROFILE, profileJson);
+                                    editor.putBoolean(IS_ADMIN, profile.isAdmin());
+                                    editor.apply();
+                                    finish();
+                                }
+                                else{
+                                    String displayName = user.getDisplayName();
+                                    String[] names = displayName.split(" ");
+                                    String firstName = names[0];
+                                    String lastName = names[1];
+                                    String email = user.getEmail();
+                                    ref.set(new Profile(firstName, lastName, email, userId))
+                                                .addOnCompleteListener(task1 -> saveData(true));
 
-                                String displayName = user.getDisplayName();
-                                String[] names = displayName.split(" ");
-                                String firstName = names[0];
-                                String lastName = names[1];
-                                String email = user.getEmail();
-                                ref.set(new Profile(firstName, lastName, email, userId));
-
-                                //Reusable.grabImage(user.getPhotoUrl().toString());
-                                //completeProfile();
-                                Snackbar.make(edtEmail, "LOGIN SUCCESSFUL", Snackbar.LENGTH_LONG).show();
-                                finish();
+                                    //Reusable.grabImage(user.getPhotoUrl().toString());
+                                    //completeProfile();
+                                }
 
                             }
                         });
@@ -277,5 +292,38 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
     }
 
+    private void openDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = inflater.inflate(R.layout.dialog_congrats, null);
+        builder.setView(dialogView);
+        final AlertDialog dialog= builder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(false);
+        dialog.show();
 
+        Button btnContinue = dialog.findViewById(R.id.btnContinue);
+        btnContinue.setOnClickListener(view -> {
+            startActivity(new Intent(LoginActivity.this, FormFillActivity.class));
+            finish();
+        });
+    }
+
+    private void saveData(boolean openDialog) {
+        FirebaseUtils.getDatabase().collection(USERS_PATH).document(user.getUid()).get()
+                .addOnCompleteListener(task -> {
+            if(!task.isSuccessful()||(task.getResult()==null))
+                return;
+            Profile profile = task.getResult().toObject(Profile.class);
+            String profileJson = gson.toJson(profile);
+            editor.putString(USER_PROFILE, profileJson);
+            editor.putBoolean(IS_ADMIN, profile.isAdmin());
+            editor.apply();
+
+            if(openDialog)
+                openDialog();
+            else
+                finish();
+        });
+    }
 }

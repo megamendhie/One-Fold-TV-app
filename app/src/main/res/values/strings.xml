@@ -4,11 +4,13 @@
     <string name="seek_to">Jump To</string>
     <string name="seek_to_hint">Seconds</string>
     <string name="txt_des">YouTube video thumbnail</string>
-    <string name="txt_dev">Developed with ❤️ by <a href="https://twitter.com/Megamendhie">Mendhie (@Megamendhie)</a>
-        \n\nCodes curated by <a href="https://twitter.com/Megamendhie">Mendhie</a> and <a href="https://facebook.com/nwugo.jasmine">Jaachimma</a>
-        \n\nLogo designed by <a href="https://twitter.com/Nsikakowo">Nsikak Owo</a>
-        \n\nIllustrations from <a href="https://dribbble.com/shots/5345128-Free-Illustration-Open-Account-Digital-Banking-Illustration">Pablo</a>, <a href="https://www.freepik.com/free-vector/illustration-satellite_2632421.htm#">Rawpixel</a>, and <a href="https://dribbble.com/shots/12189542-Futuristic-soldier">Thierry</a></string>
+    <string name="txt_dev">Developed by <a href="https://facebook.com/mendhie">Mendhie Emmanuel Imeh</a>
+        \n\nContent Creators: <a href="https://facebook.com/ememobong.essien">Ememobong Essien</a> and <a href="https://facebook.com/nwugo.jasmine">Hope Dan</a>
+        \n\nLogo design: <a href="https://twitter.com/Nsikakowo">Gabriel Ogundele</a>
+        \n\nProduct Manager: <a href="https://facebook.com/otobong.ite">Otobong Ite</a></string>
     <string name="txt_mail"><u>onefoldtv@gmail.com</u></string>
+    <string name="txt_about">One Fold TV is a TV program of The Apostolic Church, Akwa Ibom Field Territory. The One Fold TV app gives you exclusive access to all the programs of One Fold TV; this includes gosple messesges from our Pastors and Apostles, choir renditions, youth reflection, The Apostolic Report, and Gifted Mind.
+        \n\nAlso, the app keeps you up-to-date with the latest events and programs from the seven fields of The Apostolic Church in Akwa Ibom State Territory</string>
     <array name="video_type">
         <item>-- select --</item>
         <item>Full video</item>
@@ -17,5 +19,27 @@
         <item>Youth Reflection</item>
         <item>Gifted Minds</item>
         <item>Apostolic Report</item>
+    </array>
+
+    <array name="field_type">
+        <item>-- select --</item>
+        <item>Uyo</item>
+        <item>Ikot Ekpene</item>
+        <item>Eket</item>
+        <item>Oron</item>
+        <item>Ikot Abasi</item>
+        <item>Etinan</item>
+        <item>Ikono</item>
+    </array>
+
+    <array name="field_selector">
+        <item>-- Select Field --</item>
+        <item>Uyo Field</item>
+        <item>Ikot Ekpene Field</item>
+        <item>Eket Field</item>
+        <item>Oron Field</item>
+        <item>Ikot Abasi Field</item>
+        <item>Etinan Field</item>
+        <item>Ikono Field</item>
     </array>
 </resources>

@@ -4,7 +4,7 @@
     package="com.solojet.onefoldtv">
 
     <dist:module dist:instant="true" />
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -14,12 +14,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ContactActivity"></activity>
+        <activity
+            android:name=".FormFillActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
+        <activity android:name=".UploadEventActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ContactActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".NewsActivity" />
-        <activity android:name=".SignupActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".UploadVideoActivity" />
+        <activity android:name=".SignupActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".LoginActivity"
+            android:windowSoftInputMode="adjustResize"  />
+        <activity android:name=".UploadVideoActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".EventLandingActivity" />
         <activity android:name=".AboutActivity" />
         <activity android:name=".EventsActivity" />
