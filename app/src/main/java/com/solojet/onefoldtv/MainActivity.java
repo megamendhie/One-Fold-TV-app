@@ -4,6 +4,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -11,6 +13,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -23,8 +26,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.gson.Gson;
 
+import adapters.ContentAdapter;
+import adapters.ContentProAdapter;
 import config.FirebaseUtils;
 import de.hdodenhof.circleimageview.CircleImageView;
 import models.Profile;
@@ -38,12 +46,13 @@ import static models.ConstantVariables.REPORT;
 import static models.ConstantVariables.TYPE;
 import static models.ConstantVariables.USERS_PATH;
 import static models.ConstantVariables.USER_PROFILE;
+import static models.ConstantVariables.VIDEO_PATH;
 import static models.ConstantVariables.WORD;
 import static models.ConstantVariables.YOUTH;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private DrawerLayout mDrawerLayout;
-    private String myId = "";
+    private String userId = "";
     private View header;
     private Profile profile;
     private SharedPreferences.Editor editor;
@@ -53,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private MenuItem mnuLogout;
+    private boolean isAdmin;
 
     @Override
     protected void onStart() {
@@ -78,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        editor = prefs.edit();
 
 
         //initialize DrawerLayout and NavigationView
@@ -95,52 +104,71 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         txtName.setOnClickListener(this);
 
         auth = FirebaseUtils.getAuth();
+        isAdmin = prefs.getBoolean(IS_ADMIN, false);
         if(auth.getCurrentUser()!= null){
             String json = prefs.getString(USER_PROFILE, "");
             profile = (json.equals("")) ? null : gson.fromJson(json, Profile.class);
-            myId = auth.getCurrentUser().getUid();
-            setProfile();
-            mnuLogout.setTitle("Logout");
-            FirebaseUtils.getDatabase().collection(USERS_PATH).document(myId).get()
-                    .addOnCompleteListener(task -> {
-                        if(!task.isSuccessful()||(task.getResult()==null)|| !task.getResult().exists())
-                            return;
-                        profile = task.getResult().toObject(Profile.class);
-                        String profileJson = gson.toJson(profile);
-                        editor.putString(USER_PROFILE, profileJson);
-                        editor.putBoolean(IS_ADMIN, profile.isAdmin());
-                        editor.apply();
-                        setProfile();
-                    });
+            userId = auth.getCurrentUser().getUid();
+            setProfile(true);
         }
         else
-            mnuLogout.setTitle("Login");
+            setProfile(false);
 
+        loadVideos(isAdmin);
         authStateListener = firebaseAuth -> {
+            editor = prefs.edit();
             if(firebaseAuth.getCurrentUser()==null){
-            myId = "";
-            editor.putString(USER_PROFILE, "");
-            editor.putBoolean(IS_ADMIN, false);
-            editor.apply();
-            txtName.setText("Username");
-            mnuLogout.setTitle("Login");
+                userId = "";
+                if(isAdmin) loadVideos(false);
+                isAdmin = false;
+                editor.putString(USER_PROFILE, "");
+                editor.putBoolean(IS_ADMIN, isAdmin);
+                editor.apply();
+                setProfile(false);
             }
             else {
-                myId = firebaseAuth.getCurrentUser().getUid();
-                setProfile();
-                mnuLogout.setTitle("Logout");
+                userId = firebaseAuth.getCurrentUser().getUid();
+                FirebaseUtils.getDatabase().collection(USERS_PATH).document(userId).get()
+                        .addOnCompleteListener(task -> {
+                            if(!task.isSuccessful()||(task.getResult()==null)|| !task.getResult().exists())
+                                return;
+                            profile = task.getResult().toObject(Profile.class);
+                            String profileJson = gson.toJson(profile);
+                            if(profile.isAdmin()&& !isAdmin) loadVideos(true);
+                            isAdmin = profile.isAdmin();
+                            editor.putString(USER_PROFILE, profileJson);
+                            editor.putBoolean(IS_ADMIN, isAdmin);
+                            editor.apply();
+                            setProfile(true);
+                        });
             }
         };
     }
 
-    private void setProfile() {
-        if(profile==null)
-            return;
-        txtName.setText(String.format("%s %s", profile.getFirstName(), profile.getLastName()));
-        if(profile.getImageUrl().isEmpty())
+    private void loadVideos(boolean isAdmin){
+        Log.d("MainAct", "loadVideos: ");
+        RecyclerView lstVideos = findViewById(R.id.lstVideos);
+        lstVideos.setLayoutManager(new LinearLayoutManager(this));
+        CollectionReference ref = FirebaseFirestore.getInstance().collection(VIDEO_PATH);
+        Query query = ref.orderBy("time", Query.Direction.DESCENDING).limit(15);
+        ContentProAdapter adapter = new ContentProAdapter(query, isAdmin);
+        lstVideos.setAdapter(adapter);
+        adapter.startListening();
+    }
+
+    private void setProfile(boolean loggedIn) {
+        if(loggedIn && profile!=null){
+            mnuLogout.setTitle("Logout");
+            txtName.setText(String.format("%s %s", profile.getFirstName(), profile.getLastName()));
+            if (profile.getImageUrl().isEmpty())
+                Glide.with(this).load(getResources().getDrawable(R.drawable.blank_profile_pic)).into(imgDp);
+            else
+                Glide.with(this).load(profile.getImageUrl()).into(imgDp);}
+        else {
+            txtName.setText("Username");
+            mnuLogout.setTitle("Login");
             Glide.with(this).load(getResources().getDrawable(R.drawable.blank_profile_pic)).into(imgDp);
-        else
-            Glide.with(this).load(profile.getImageUrl()).into(imgDp);
+        }
     }
 
     public void openContent(View view){
@@ -222,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void openMyProfile() {
         Intent intent = new Intent(new Intent(this, ProfileActivity.class));
-        intent.putExtra(CURRENT_USER, myId);
+        intent.putExtra(CURRENT_USER, userId);
         startActivity(intent);
     }
 

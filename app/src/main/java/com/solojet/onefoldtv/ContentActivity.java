@@ -1,5 +1,6 @@
 package com.solojet.onefoldtv;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,11 +37,13 @@ import views.LikeButton;
 
 import static config.Config.YOUTUBE_API_KEY;
 import static models.ConstantVariables.ALL;
+import static models.ConstantVariables.FROM_MAIN;
 import static models.ConstantVariables.IS_ADMIN;
 import static models.ConstantVariables.LIKES;
 import static models.ConstantVariables.LIKES_COUNT;
 import static models.ConstantVariables.STATUS;
 import static models.ConstantVariables.TYPE;
+import static models.ConstantVariables.VIDEO;
 import static models.ConstantVariables.VIDEO_PATH;
 import static views.LikeButton.LIKED;
 import static views.LikeButton.NOT_LIKED;
@@ -49,7 +52,7 @@ public class ContentActivity extends YouTubeBaseActivity implements ContentAdapt
 
     private YouTubePlayerView youTubeView;
     private static final int RECOVERY_REQUEST = 1;
-    private TextView txtTitle, txtDescription, txtLikes;
+    private TextView txtTitle, txtMore, txtDescription, txtLikes;
     private LikeButton imgLike;
     private String index;
     private String userId;
@@ -59,6 +62,7 @@ public class ContentActivity extends YouTubeBaseActivity implements ContentAdapt
     private boolean isAdmin;
     private SharedPreferences prefs;
     private Video model;
+    private boolean fromMain;
 
     @Override
     protected void onResume() {
@@ -76,6 +80,7 @@ public class ContentActivity extends YouTubeBaseActivity implements ContentAdapt
         youTubeView = findViewById(R.id.playerMain);
         RecyclerView lstVideos = findViewById(R.id.lstVideos);
         txtTitle = findViewById(R.id.txtTitle);
+        txtMore = findViewById(R.id.txtMore);
         txtDescription = findViewById(R.id.txtDes);
         txtLikes = findViewById(R.id.txtLikes);
         imgLike = findViewById(R.id.imgLikes);
@@ -96,8 +101,10 @@ public class ContentActivity extends YouTubeBaseActivity implements ContentAdapt
         });
 
         //get video type
-        if(getIntent()!=null)
+        if(getIntent()!=null) {
             type = getIntent().getStringExtra(TYPE);
+            fromMain = getIntent().getBooleanExtra(FROM_MAIN, false);
+        }
 
         CollectionReference ref = FirebaseFirestore.getInstance().collection(VIDEO_PATH);
         Query query;
@@ -106,16 +113,30 @@ public class ContentActivity extends YouTubeBaseActivity implements ContentAdapt
         else
             query = ref.orderBy("time", Query.Direction.DESCENDING).whereEqualTo(TYPE, type);
 
-        ContentAdapter adapter = new ContentAdapter(this, query, isAdmin);
-        lstVideos.setAdapter(adapter);
-        adapter.startListening();
+        ContentAdapter adapter;
+        if(fromMain){
+            Video video = getIntent().getParcelableExtra(VIDEO);
+            adapter = new ContentAdapter(this, query, isAdmin, false, video.getId());
+            lstVideos.setAdapter(adapter);
+            adapter.startListening();
+            playVideo(video, true);
+        }
+        else {
+            adapter = new ContentAdapter(this, query, isAdmin, true, "");
+            lstVideos.setAdapter(adapter);
+            adapter.startListening();
+        }
     }
 
     public void showDescription(View v){
-        if(txtDescription.getVisibility() == View.VISIBLE)
-            txtDescription.setVisibility(View.GONE);
-        else
+        if(txtMore.getText().toString().equals("see more")){
+            txtMore.setText("see less");
             txtDescription.setVisibility(View.VISIBLE);
+        }
+        else{
+            txtMore.setText("see more");
+            txtDescription.setVisibility(View.GONE);
+        }
     }
 
     public void onLike(View v){
@@ -189,6 +210,10 @@ public class ContentActivity extends YouTubeBaseActivity implements ContentAdapt
 
     @Override
     public void onItemClicked(Video model, boolean instantPlay) {
+        playVideo(model, instantPlay);
+    }
+
+    private void playVideo(@NonNull Video model, boolean instantPlay) {
         txtTitle.setText(model.getTitle());
         txtDescription.setText(model.getDes());
         imgLike.setState(model.getLikes().contains(userId)?LIKED:NOT_LIKED);
