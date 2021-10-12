@@ -2,6 +2,7 @@ package com.solojet.onefoldtv;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -129,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             else {
                 userId = firebaseAuth.getCurrentUser().getUid();
                 FirebaseUtils.getDatabase().collection(USERS_PATH).document(userId).get()
-                        .addOnCompleteListener(task -> {
+                        .addOnCompleteListener(MainActivity.this, task -> {
                             if(!task.isSuccessful()||(task.getResult()==null)|| !task.getResult().exists())
                                 return;
                             profile = task.getResult().toObject(Profile.class);

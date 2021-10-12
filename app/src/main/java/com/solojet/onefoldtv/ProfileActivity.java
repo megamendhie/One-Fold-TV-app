@@ -51,7 +51,7 @@ public class ProfileActivity extends AppCompatActivity {
             myId = user.getUid();
 
         FirebaseUtils.getDatabase().collection("users").document(userId)
-                .addSnapshotListener((snapshot, error) -> {
+                .addSnapshotListener(ProfileActivity.this, (snapshot, error) -> {
                     if(snapshot==null||!snapshot.exists())
                         return;
 
