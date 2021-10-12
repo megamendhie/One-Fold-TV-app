@@ -31,26 +31,31 @@ import static models.ConstantVariables.STATUS;
 import static models.ConstantVariables.VIDEO_PATH;
 
 public class ContentAdapter extends FirestoreRecyclerAdapter<Video, ContentAdapter.ContentViewHolder> {
-    private ItemClickListener clickListener;
+    private final ItemClickListener clickListener;
     private TextView txtCurrentlyPlaying;
     private boolean mediaLoaded = false;
-    private boolean isAdmin;
+    private final boolean isAdmin;
+    private final boolean playFirstMedia;
+    private final String videoId;
 
     public interface ItemClickListener {
         void onItemClicked (Video model, boolean instantPlay);
     }
 
-    public ContentAdapter (ItemClickListener clickListener, Query query, boolean isAdmin){
+    public ContentAdapter (ItemClickListener clickListener, Query query, boolean isAdmin,
+                           boolean playFirstMedia, String videoId){
         super(new FirestoreRecyclerOptions.Builder<Video>()
                 .setQuery(query, Video.class)
                 .build());
         this.clickListener = clickListener;
         this.isAdmin = isAdmin;
+        this.playFirstMedia = playFirstMedia;
+        this.videoId = videoId;
     }
 
     private void playFirst(TextView txtTitle, Video model){
         txtTitle.setTextColor(txtTitle.getContext().getResources().getColor(R.color.colorPrimary));
-        this.txtCurrentlyPlaying = txtTitle;
+        txtCurrentlyPlaying = txtTitle;
         clickListener.onItemClicked(model, false);
         mediaLoaded = true;
     }
@@ -64,29 +69,30 @@ public class ContentAdapter extends FirestoreRecyclerAdapter<Video, ContentAdapt
 
     @Override
     protected void onBindViewHolder(@NonNull ContentViewHolder holder, int position, @NonNull Video model) {
-        String thumbnailHq = "https://img.youtube.com/vi/"+model.getUrlIndex()+"/hqdefault.jpg";
+        String thumbnailHq = "https://img.youtube.com/vi/"+model.getUrlIndex()+"/mqdefault.jpg";
 
         holder.bindView(clickListener, model);
         Glide.with(holder.imgThumbnail).load(thumbnailHq).into(holder.imgThumbnail);
-        if(!mediaLoaded && position==0)
+        if(playFirstMedia && !mediaLoaded && position==0)
             playFirst(holder.txtTitle, model);
 
-        holder.imgMore.setVisibility(isAdmin? View.VISIBLE: View.GONE);
+        holder.imgMore.setVisibility(isAdmin? View.VISIBLE: View.INVISIBLE);
         holder.imgMore.setOnClickListener(view -> holder.openDialog(model));
-
+        if(!playFirstMedia && videoId.equals(model.getId())) {
+            txtCurrentlyPlaying = holder.txtTitle;
+            holder.txtTitle.setTextColor(holder.txtTitle.getContext().getResources().getColor(R.color.colorPrimary));
+        }
     }
 
     class ContentViewHolder extends RecyclerView.ViewHolder{
-        private ImageView imgThumbnail;
-        private ImageView imgLikes;
-        private TextView txtTitle;
-        private ImageView imgMore;
+        private final ImageView imgThumbnail;
+        private final TextView txtTitle;
+        private final ImageView imgMore;
 
         ContentViewHolder(@NonNull View itemView) {
             super(itemView);
             imgThumbnail = itemView.findViewById(R.id.imgThumbnail);
             txtTitle = itemView.findViewById(R.id.txtTitle);
-            imgLikes = itemView.findViewById(R.id.imgLikes);
             imgMore = itemView.findViewById(R.id.imgMore);
         }
 
@@ -96,7 +102,6 @@ public class ContentAdapter extends FirestoreRecyclerAdapter<Video, ContentAdapt
 
             if(FirebaseUtils.getAuth().getCurrentUser()!=null){
                 userId = FirebaseUtils.getAuth().getCurrentUser().getUid();
-                imgLikes.setVisibility(model.getLikes().contains(userId)? View.VISIBLE: View.GONE);
             }
             itemView.setOnClickListener(view -> {
                 if(txtCurrentlyPlaying!=null)

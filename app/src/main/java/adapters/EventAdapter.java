@@ -25,11 +25,11 @@ import com.solojet.onefoldtv.UploadEventActivity;
 import config.FirebaseUtils;
 import models.Event;
 
+import static models.ConstantVariables.EVENT_PATH;
 import static models.ConstantVariables.STATUS;
-import static models.ConstantVariables.VIDEO_PATH;
 
 public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.EventViewHolder> {
-    private boolean isAdmin;
+    private final boolean isAdmin;
 
     public EventAdapter(Query query, boolean isAdmin) {
         super(new FirestoreRecyclerOptions.Builder<Event>()
@@ -70,12 +70,6 @@ public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.E
             String time = DateFormat.format("h:mm a", model.getTimeEvent()).toString();
             txtDate.setText(date);
             txtTime.setText(time);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                }
-            });
 
             itemView.setOnLongClickListener(view -> {
                 if(!isAdmin)
@@ -108,18 +102,19 @@ public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.E
                 btnEdit.getContext().startActivity(intent);
             });
 
-            btnDelete.setOnClickListener(view -> FirebaseUtils.getDatabase().collection(VIDEO_PATH)
-                    .document(model.getId()).delete()
-                    .addOnCompleteListener(task -> {
-                        if(task.isSuccessful()) {
-                            dialog.cancel();
-                            Snackbar.make(itemView, "EVENT DELETED", Snackbar.LENGTH_SHORT).show();
-                        }
-                        else {
-                            Toast.makeText(btnEdit.getRootView().getContext(),
-                                    "Cannot delete event", Toast.LENGTH_SHORT).show();
-                        }
-                    }));
+            btnDelete.setOnClickListener(view -> {
+                dialog.cancel();
+                FirebaseUtils.getDatabase().collection(EVENT_PATH)
+                        .document(model.getId()).delete()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Snackbar.make(itemView, "Event Deleted", Snackbar.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(btnEdit.getRootView().getContext(),
+                                        "Cannot delete event", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            });
         }
     }
 }
