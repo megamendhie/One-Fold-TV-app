@@ -18,6 +18,8 @@ public class ConstantVariables {
     public static String EVENT_PATH = "events";
     public static String USER_PROFILE = "user_profile";
     public static String IS_ADMIN = "isAdmin";
+    public static String FROM_MAIN = "fromMain";
+    public static String VIDEO = "video";
 
     public static String FIELD_NAME = "field_name";
     public static String FIELD = "field";
@@ -27,7 +29,7 @@ public class ConstantVariables {
     public static String ORON = "oron";
     public static String IKOT_ABASI = "ikot_abasi";
     public static String ETINAN = "etinan";
-    public static String IKONO = "Ikono";
+    public static String IKONO = "ikono";
 
 
     public static String PROFILE_PICTURES = "profile_pictures";

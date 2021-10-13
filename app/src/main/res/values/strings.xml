@@ -11,6 +11,7 @@
     <string name="txt_mail"><u>onefoldtv@gmail.com</u></string>
     <string name="txt_about">One Fold TV is a TV program of The Apostolic Church, Akwa Ibom Field Territory. The One Fold TV app gives you exclusive access to all the programs of One Fold TV; this includes gosple messesges from our Pastors and Apostles, choir renditions, youth reflection, The Apostolic Report, and Gifted Mind.
         \n\nAlso, the app keeps you up-to-date with the latest events and programs from the seven fields of The Apostolic Church in Akwa Ibom State Territory</string>
+    <string name="rate_app">Rate App</string>
     <array name="video_type">
         <item>-- select --</item>
         <item>Full video</item>
