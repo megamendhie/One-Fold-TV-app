@@ -55,7 +55,7 @@ public class UploadVideoActivity extends AppCompatActivity {
     private FirebaseUser user;
     private Video model;
     private boolean edited;
-    private final Calendar c = Calendar.getInstance();
+    private final Calendar cal = Calendar.getInstance();
     private final Gson gson = new Gson();
 
     @Override
@@ -104,11 +104,12 @@ public class UploadVideoActivity extends AppCompatActivity {
             edited = true;
             txtTitle.setText("Edit Video");
             txtTitleSub.setText("Edit an existing video");
+            btnPost.setText("Update");
             model = getIntent().getParcelableExtra("model");
 
             date = DateFormat.format("d/M/yyyy", model.getTime()).toString();
             time = DateFormat.format("H:m", model.getTime()).toString();
-            c.setTimeInMillis(model.getTime());
+            cal.setTimeInMillis(model.getTime());
             edtDes.setText(model.getDes());
             edtTitle.setText(model.getTitle());
             edtVideoId.setText(model.getUrlIndex());
@@ -238,12 +239,13 @@ public class UploadVideoActivity extends AppCompatActivity {
     }
 
     public void setDate(View view){
-        int mYear = c.get(Calendar.YEAR);
-        int mMonth = c.get(Calendar.MONTH);
-        int mDay = c.get(Calendar.DAY_OF_MONTH);
+        int mYear = cal.get(Calendar.YEAR);
+        int mMonth = cal.get(Calendar.MONTH);
+        int mDay = cal.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, (datePicker, year, month, day) -> {
-            date = String.format("%s/%s/%s", day, month, year);
+            date = String.format("%s/%s/%s", day, (month+1), year);
+            cal.setTimeInMillis(getTimeStamp());
             txtDate.setText(getNewDate());
         }, mYear, mMonth, mDay);
         datePickerDialog.show();
@@ -252,11 +254,12 @@ public class UploadVideoActivity extends AppCompatActivity {
     }
 
     public void setTime(View view){
-        int mHour = c.get(Calendar.HOUR_OF_DAY);
-        int mMinute = c.get(Calendar.MINUTE);
+        int mHour = cal.get(Calendar.HOUR_OF_DAY);
+        int mMinute = cal.get(Calendar.MINUTE);
 
         TimePickerDialog timePicker = new TimePickerDialog(this, (timePicker1, hour, min) -> {
             time = String.format("%s:%s", hour, min);
+            cal.setTimeInMillis(getTimeStamp());
             txtTime.setText(getNewTime());
         }, mHour, mMinute, false);
         timePicker.show();

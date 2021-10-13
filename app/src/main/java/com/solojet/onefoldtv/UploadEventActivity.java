@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -56,7 +57,8 @@ public class UploadEventActivity extends AppCompatActivity {
     private FirebaseUser user;
     private Event model;
     private boolean edited;
-    final Calendar c = Calendar.getInstance();
+    final Calendar cal = Calendar.getInstance();
+    private Date eventDate = new Date();
     private final Gson gson = new Gson();
 
     @Override
@@ -101,11 +103,12 @@ public class UploadEventActivity extends AppCompatActivity {
         } else {
             edited = true;
             txtTitle.setText("Edit Event");
+            btnPost.setText("Update");
             model = getIntent().getParcelableExtra("model");
 
             date = DateFormat.format("d/M/yyyy", model.getTimeEvent()).toString();
             time = DateFormat.format("H:m", model.getTimeEvent()).toString();
-            c.setTimeInMillis(model.getTimeEvent());
+            cal.setTimeInMillis(model.getTimeEvent());
             edtAbout.setText(model.getAbout());
             edtTitle.setText(model.getTitle());
             edtVenue.setText(model.getVenue());
@@ -140,6 +143,7 @@ public class UploadEventActivity extends AppCompatActivity {
                         break;
                     case 6:
                         field = ETINAN;
+                        break;
                     case 7:
                         field = IKONO;
                         break;
@@ -232,26 +236,27 @@ public class UploadEventActivity extends AppCompatActivity {
     }
 
     public void setDate(View view){
-        int mYear = c.get(Calendar.YEAR);
-        int mMonth = c.get(Calendar.MONTH);
-        int mDay = c.get(Calendar.DAY_OF_MONTH);
+        int mYear = cal.get(Calendar.YEAR);
+        int mMonth = cal.get(Calendar.MONTH);
+        int mDay = cal.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, (datePicker, year, month, day) -> {
-            date = String.format("%s/%s/%s", day, month, year);
+            date = String.format("%s/%s/%s", day, (month+1), year);
+            cal.setTimeInMillis(getTimeStamp());
             txtDate.setText(getNewDate());
         },
                 mYear, mMonth, mDay);
         datePickerDialog.show();
 
-
     }
 
     public void setTime(View view){
-        int mHour = c.get(Calendar.HOUR_OF_DAY);
-        int mMinute = c.get(Calendar.MINUTE);
+        int mHour = cal.get(Calendar.HOUR_OF_DAY);
+        int mMinute = cal.get(Calendar.MINUTE);
 
         TimePickerDialog timePicker = new TimePickerDialog(this, (timePicker1, hour, min) -> {
             time = String.format("%s:%s", hour, min);
+            cal.setTimeInMillis(getTimeStamp());
             txtTime.setText(getNewTime());
         },
                 mHour, mMinute, false);
