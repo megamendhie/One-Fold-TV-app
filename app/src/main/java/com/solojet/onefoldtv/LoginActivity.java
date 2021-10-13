@@ -29,22 +29,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 
 import config.FirebaseUtils;
-import config.Reusable;
 import models.Profile;
 
 import static models.ConstantVariables.IS_ADMIN;
@@ -238,7 +232,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    public void authWithGoogle(GoogleSignInAccount account){
+    public void authWithGoogle(@NonNull GoogleSignInAccount account){
         final AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         FirebaseUtils.getAuth().signInWithCredential(credential)
                 .addOnCompleteListener(task -> {
