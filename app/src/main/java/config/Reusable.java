@@ -23,7 +23,7 @@ public class Reusable {
         switch (type){
             case "all":
                 return 1;
-            case "Word":
+            case "word":
                 return 2;
             case "praise":
                 return 3;
