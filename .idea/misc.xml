@@ -3,13 +3,21 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/workspace/OneFoldTV/app/src/main/res/layout/activity_content.xml" value="0.25" />
+        <entry key="..\:/workspace/OneFoldTV/app/src/main/res/drawable/ic_mail_outline_black_24dp.xml" value="0.21354166666666666" />
+        <entry key="..\:/workspace/OneFoldTV/app/src/main/res/drawable/ic_outline_admin_panel_24.xml" value="0.21354166666666666" />
+        <entry key="..\:/workspace/OneFoldTV/app/src/main/res/layout/activity_admin_panel.xml" value="0.19739583333333333" />
+        <entry key="..\:/workspace/OneFoldTV/app/src/main/res/layout/activity_content.xml" value="0.22" />
         <entry key="..\:/workspace/OneFoldTV/app/src/main/res/layout/activity_events.xml" value="0.19739583333333333" />
+        <entry key="..\:/workspace/OneFoldTV/app/src/main/res/layout/activity_live_video.xml" value="0.19739583333333333" />
         <entry key="..\:/workspace/OneFoldTV/app/src/main/res/layout/activity_login.xml" value="0.11775362318840579" />
-        <entry key="..\:/workspace/OneFoldTV/app/src/main/res/layout/activity_main.xml" value="0.19739583333333333" />
+        <entry key="..\:/workspace/OneFoldTV/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/workspace/OneFoldTV/app/src/main/res/layout/activity_notification.xml" value="0.25" />
+        <entry key="..\:/workspace/OneFoldTV/app/src/main/res/layout/activity_upload_live.xml" value="0.22" />
+        <entry key="..\:/workspace/OneFoldTV/app/src/main/res/layout/activity_upload_video.xml" value="0.14" />
         <entry key="..\:/workspace/OneFoldTV/app/src/main/res/layout/dialog_content.xml" value="0.33" />
         <entry key="..\:/workspace/OneFoldTV/app/src/main/res/layout/item_video.xml" value="0.25" />
         <entry key="..\:/workspace/OneFoldTV/app/src/main/res/layout/item_video_lg.xml" value="0.19739583333333333" />
+        <entry key="..\:/workspace/OneFoldTV/app/src/main/res/menu/drawer_menu.xml" value="0.19739583333333333" />
       </map>
     </option>
   </component>
