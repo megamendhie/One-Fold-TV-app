@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".NotificationActivity">
+
+    <TextView
+        android:id="@+id/txtNote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="#ff0000"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:text="Note: Kindly review the notification title and text properly. Once you click the send button it's gone."
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginTop="15dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:text="Notification Title"
+        app:layout_constraintTop_toBottomOf="@id/txtNote"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:text="(shown to users as title)"
+        android:layout_marginStart="2dp"
+        app:layout_constraintTop_toTopOf="@id/txtTitle"
+        app:layout_constraintStart_toEndOf="@id/txtTitle"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txtiTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        style="@style/CustomOutlinedBox"
+        app:boxCornerRadiusBottomEnd="@dimen/box_cnr_radius"
+        app:boxCornerRadiusBottomStart="@dimen/box_cnr_radius"
+        app:boxCornerRadiusTopEnd="@dimen/box_cnr_radius"
+        app:boxCornerRadiusTopStart="@dimen/box_cnr_radius"
+        app:layout_constraintTop_toBottomOf="@id/txtTitle">
+        <EditText
+            android:id="@+id/edtTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:inputType="textCapSentences|textNoSuggestions|textMultiLine"
+            android:maxLength="280" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/txtText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:text="Notification Text"
+        android:textSize="16sp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/txtiTitle"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txtiText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        style="@style/CustomOutlinedBox"
+        app:boxCornerRadiusBottomEnd="@dimen/box_cnr_radius"
+        app:boxCornerRadiusBottomStart="@dimen/box_cnr_radius"
+        app:boxCornerRadiusTopEnd="@dimen/box_cnr_radius"
+        app:boxCornerRadiusTopStart="@dimen/box_cnr_radius"
+        app:layout_constraintTop_toBottomOf="@id/txtText">
+        <EditText
+            android:id="@+id/edtText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="2"
+            android:maxLines="2"
+            android:gravity="top|left"
+            android:inputType="textCapSentences|textNoSuggestions|textMultiLine"
+            android:maxLength="280" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toBottomOf="@id/txtiText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="16sp"
+        app:cornerRadius="16dp"
+        android:paddingTop="@dimen/btn_padding"
+        android:paddingBottom="@dimen/btn_padding"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:text="Send Notification"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

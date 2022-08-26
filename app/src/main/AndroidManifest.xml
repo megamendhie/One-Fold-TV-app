@@ -4,8 +4,10 @@
     package="com.solojet.onefoldtv">
 
     <dist:module dist:instant="true" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+
     <queries>
         <intent>
             <action android:name="com.google.android.youtube.api.service.START" />
@@ -20,34 +22,57 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".NotificationActivity"
+            android:exported="true" />
+        <activity
+            android:name=".AdminPanelActivity"
+            android:exported="true" />
+        <activity
+            android:name=".UploadLiveActivity"
+            android:exported="true" />
+        <activity
             android:name=".FormFillActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".UploadEventActivity"
+        <activity
+            android:name=".UploadEventActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ContactActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".NewsActivity" />
-        <activity android:name=".SignupActivity"
+        <activity
+            android:name=".SignupActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".LoginActivity"
-            android:windowSoftInputMode="adjustResize"  />
-        <activity android:name=".UploadVideoActivity"
+        <activity
+            android:name=".LoginActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".UploadVideoActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".EventLandingActivity" />
         <activity android:name=".AboutActivity" />
         <activity android:name=".EventsActivity" />
         <activity android:name=".ContentActivity" />
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name="services.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
