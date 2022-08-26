@@ -87,7 +87,6 @@ public class ContentActivity extends YouTubeBaseActivity implements ContentAdapt
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         isAdmin = prefs.getBoolean(IS_ADMIN, false);
 
-
         lstVideos.setLayoutManager(new LinearLayoutManager(this));
         youTubeView.initialize(YOUTUBE_API_KEY, this);
 

@@ -14,6 +14,11 @@
             android:id="@+id/nav_contact"
             android:icon="@drawable/ic_mail_outline_black_24dp"
             android:title="Contact us" />
+        <item
+            android:id="@+id/nav_admin"
+            android:icon="@drawable/ic_outline_admin_panel_24"
+            android:title="Admin Panel"
+            android:visible="false"/>
 
         <item
             android:id="@+id/nav_logout"

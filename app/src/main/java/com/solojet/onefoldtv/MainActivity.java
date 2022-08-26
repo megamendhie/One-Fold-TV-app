@@ -17,6 +17,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.gson.Gson;
@@ -37,16 +39,22 @@ import adapters.ContentProAdapter;
 import config.FirebaseUtils;
 import de.hdodenhof.circleimageview.CircleImageView;
 import models.Profile;
+import models.Video;
 
+import static config.FirebaseUtils.getDatabase;
 import static models.ConstantVariables.ALL;
 import static models.ConstantVariables.CURRENT_USER;
+import static models.ConstantVariables.FROM_MAIN;
 import static models.ConstantVariables.GIFTED;
 import static models.ConstantVariables.IS_ADMIN;
+import static models.ConstantVariables.LIVE;
+import static models.ConstantVariables.LIVE_VIDEO;
 import static models.ConstantVariables.PRAISE;
 import static models.ConstantVariables.REPORT;
 import static models.ConstantVariables.TYPE;
 import static models.ConstantVariables.USERS_PATH;
 import static models.ConstantVariables.USER_PROFILE;
+import static models.ConstantVariables.VIDEO;
 import static models.ConstantVariables.VIDEO_PATH;
 import static models.ConstantVariables.WORD;
 import static models.ConstantVariables.YOUTH;
@@ -56,10 +64,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private String userId = "";
     private View header;
     private Profile profile;
+    private Video video;
     private SharedPreferences.Editor editor;
     private final Gson gson = new Gson();
     private CircleImageView imgDp;
-    private TextView txtName;
+    private LinearLayout lnrLive;
+    private TextView txtName, txtLive;
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private MenuItem mnuLogout;
@@ -69,6 +79,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStart() {
         super.onStart();
         auth.addAuthStateListener(authStateListener);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkLiveVideo();
     }
 
     @Override
@@ -101,8 +117,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         imgDp = header.findViewById(R.id.imgProfilePic);
         imgDp.setOnClickListener(this);
+        lnrLive = findViewById(R.id.lnrLive);
+        lnrLive.setOnClickListener(view -> {
+            Intent intent = new Intent(this, ContentActivity.class);
+            intent.putExtra(TYPE, ALL);
+            intent.putExtra(FROM_MAIN, true);
+            intent.putExtra(VIDEO, video);
+            startActivity(intent);
+        });
         txtName = header.findViewById(R.id.txtName);
         txtName.setOnClickListener(this);
+        txtLive = findViewById(R.id.txtLive);
 
         auth = FirebaseUtils.getAuth();
         isAdmin = prefs.getBoolean(IS_ADMIN, false);
@@ -111,14 +136,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             profile = (json.equals("")) ? null : gson.fromJson(json, Profile.class);
             userId = auth.getCurrentUser().getUid();
             setProfile(true);
+            if(profile!=null && profile.isAdmin())
+                navigationView.getMenu().findItem(R.id.nav_admin).setVisible(true);
+            else
+                navigationView.getMenu().findItem(R.id.nav_admin).setVisible(false);
         }
-        else
+        else {
             setProfile(false);
+            navigationView.getMenu().findItem(R.id.nav_admin).setVisible(false);
+        }
 
         loadVideos(isAdmin);
         authStateListener = firebaseAuth -> {
             editor = prefs.edit();
             if(firebaseAuth.getCurrentUser()==null){
+                if(navigationView!=null)
+                    navigationView.getMenu().findItem(R.id.nav_admin).setVisible(false);
                 userId = "";
                 if(isAdmin) loadVideos(false);
                 isAdmin = false;
@@ -141,9 +174,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             editor.putBoolean(IS_ADMIN, isAdmin);
                             editor.apply();
                             setProfile(true);
+                            if(navigationView!=null && isAdmin)
+                                navigationView.getMenu().findItem(R.id.nav_admin).setVisible(true);
                         });
             }
         };
+    }
+
+    private void checkLiveVideo() {
+        DocumentReference ref = getDatabase().collection(LIVE_VIDEO).document(LIVE);
+        ref.addSnapshotListener(this, (snapshot, error) -> {
+            if (error != null) {
+                Log.w("TAGmm", "Listen failed.", error);
+                return;
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                Log.d("TAGmm", "Current data: " + snapshot.getData());
+                video = snapshot.toObject(Video.class);
+                if(video.isActive()){
+                    txtLive.setText(video.getTitle());
+                    lnrLive.setVisibility(View.VISIBLE);
+                }
+                else
+                    lnrLive.setVisibility(View.GONE);
+            } else {
+                Log.d("TAGmm", "Current data: null");
+                lnrLive.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void loadVideos(boolean isAdmin){
@@ -151,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         RecyclerView lstVideos = findViewById(R.id.lstVideos);
         lstVideos.setLayoutManager(new LinearLayoutManager(this));
         CollectionReference ref = FirebaseFirestore.getInstance().collection(VIDEO_PATH);
-        Query query = ref.orderBy("time", Query.Direction.DESCENDING).limit(15);
+        Query query = ref.orderBy("time", Query.Direction.DESCENDING).limit(25);
         ContentProAdapter adapter = new ContentProAdapter(query, isAdmin);
         lstVideos.setAdapter(adapter);
         adapter.startListening();
@@ -234,7 +293,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 else
                     openMyProfile();
                 break;
-            case R.id.nav_policy:
+            case R.id.nav_admin:
+                startActivity(new Intent(this, AdminPanelActivity.class));
                 break;
             case R.id.nav_contact:
                 startActivity(new Intent(this, ContactActivity.class));

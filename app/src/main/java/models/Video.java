@@ -17,8 +17,22 @@ public class Video implements Parcelable {
     private long time;
     private long likesCount;
     private List<String> likes = new ArrayList<>();
+    private boolean active;
 
     public Video(){}
+
+    public Video(String title, String des, String urlIndex, String posterName, String posterId, long time){
+        this.active = true;
+        this.title = title;
+        this.des = des;
+        this.urlIndex = urlIndex;
+        this.id = "live";
+        this.type = "live";
+        this.posterName = posterName;
+        this.posterId = posterId;
+        this.time = time;
+        likesCount= 0;
+    }
 
     public Video(String title, String des, String urlIndex, String type, String posterName, String posterId, long time){
         this.title = title;
@@ -31,7 +45,7 @@ public class Video implements Parcelable {
         likesCount= 0;
     }
 
-    protected Video(Parcel in) {
+    protected Video(Parcel in){
         id = in.readString();
         title = in.readString();
         des = in.readString();
@@ -161,5 +175,13 @@ public class Video implements Parcelable {
         parcel.writeLong(time);
         parcel.writeLong(likesCount);
         parcel.writeStringList(likes);
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

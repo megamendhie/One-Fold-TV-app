@@ -14,6 +14,9 @@ public class ConstantVariables {
     public static String STATUS = "status";
     public static String CURRENT_USER = "current_user";
     public static String VIDEO_PATH = "videos";
+    public static String LIVE_VIDEO = "live_videos";
+    public static String LIVE = "live";
+    public static String NOTIFICATION = "notification";
     public static String USERS_PATH = "users";
     public static String EVENT_PATH = "events";
     public static String USER_PROFILE = "user_profile";
