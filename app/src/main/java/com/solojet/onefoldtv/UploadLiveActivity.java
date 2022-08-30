@@ -88,7 +88,7 @@ public class UploadLiveActivity extends AppCompatActivity {
         binding.btnPost.setOnClickListener(view1 -> postVideo());
         binding.txtCancel.setOnClickListener(view1 -> {
             binding.crdAddVideo.setVisibility(View.GONE);
-            binding.btnAdd.setVisibility(View.VISIBLE);
+            binding.btnAdd.setVisibility(video==null?View.VISIBLE:View.GONE);
         });
         binding.crdLive.setOnLongClickListener(view12 -> {
             if(video!=null){
